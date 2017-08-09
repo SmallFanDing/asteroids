@@ -1,0 +1,26 @@
+一些理解有误的地方：
+1）git log 
+	lists the most recent commit first
+2）git diff old new 
+	如果new新添加了东西，会显示add，如果old和new顺序反了，则显示删除。
+3）git checkout
+	
+	以下这道题的理解：checkout的时候会access以前的版本，如果中途改过版本，然后又commit回去了，此时访问旧版本，文件不会发生变化。
+
+	checking out an earlier commit will change the state of at least one file.
+	sometimes true. Git doesn't allow you to save a new commit if no files have been updated. However, it's possible to do the following:
+	commit 1. save a commit
+	commit 2. update some files and save another commit
+	commit 3. change all the files back to their state buring commit 1, then save again
+
+	commit 2 中如果有bug，the easiest thing to do might be to remove all the changes introduced by commit 2 to fix the bug, then figure out how to safely reintroduce the changes later.
+
+	at this time commit 3 is the latest commit, so if you checkout commit1, none of the files will be changed.
+
+	另一题：强调checkout文件的统一性
+
+	After checking out a commit, the state of all the files in the repository will be from the same point in time.
+
+	This is always true. A commit saves a snapshot of all files in the repository at the time the commit was made, so checking out an earlier commit will result in all the files being reverted to their state at the time the commit was made. That is, the files will be in a consistent state.
+
+	js/pappu.js, that is, pappu.js within the js directory

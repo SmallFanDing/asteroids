@@ -1,0 +1,59 @@
+文本比较工具 win: FC (file compare) mac: Diff (difference)
+在终端输入 diff -u new.html old.html
+-u 使得输出更容易阅读
+减号表示new里删掉的，+表示新添加的。
+
+版本比较工具
+not offline，非手动
+Drop box（默认30天）
+google doc 
+
+git 英国俚语，讨厌的人。offline and editor，手动。
+commit 提交，代表一个时间点的内容版本，提供版本信息。
+commit是git中的一个组件，
+
+查看历史版本：
+先打开文件所在目录，然后输入git log
+每次提交都有一个id，author，data，还有相关信息
+
+git diff可以对比某个文件的不同版本， 复制两个commit的id。
+diff --git file1 file2 将会用绿色显示添加的内容，红色表示删掉的内容，黑色表示相同内容。
+diff是从属于commit的一个功能，并不和版本控制直接连接，称之为操作关系。
+
+google doc是逐个跟踪文件，但git可以同时跟踪多个有关联的文件。
+这些文件统称repository，
+git log --stat会给出每次提交所更改的文件的统计数据
+绿色表示新添加的文件数，红色表示删掉的文件数。
+
+将代码库整个copy到另一台计算机 git clone URL
+查找出来的新版本在旧版本上方
+
+
+
+
+Git 错误和警告解决方案
+Should not be doing an octopus（不应执行 octopus）
+
+Octopus 是 Git 用来合并多个不同代码版本的一种策略。如果在不合适的情况下尝试使用该策略，则可能会出现此消息。
+
+You are in 'detached HEAD' state（你处于“分离的 HEAD”状态）
+
+Git 将你目前所在的提交称为 HEAD。可通过切换到前一个提交来“分离”HEAD，这在下一个视频中有说明。虽然此警告听起来不太好，但分离 HEAD 实际上不是坏事。Git 只是向你发出警告，以便你知道自己正在这样做。
+
+Panic! (the 'impossible' happened)（（天哪！“不可能的事”发生了））
+
+这是真正的错误消息，但它不是由 Git 输出的，而是由 GHC（编程语言 Haskell 的编译器）输出的。它仅在发生特别让人惊讶的错误时才会出现！
+
+结论 我们希望，这些错误和警告能让你像我们一样会心一笑！既然你已知道 Git 可能会引发的错误类型，现在你可以准备开始和 Caroline 一起检查文件的以前版本了。
+
+先找出之前可以用的版本，然后对比新老版本，deteched HEAD表示新版本处于分离状态，
+
+总结：
+git clone URL 复制代码库
+git log 查看历史版本
+git diff old new 对比版本
+git log --stat 查看文件个数变更
+git checkout id 查看之前版本
+然后 git log 会变，需要new的一些版本id来返回。
+
+

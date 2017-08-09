@@ -1,0 +1,11 @@
+ls -a 显示隐藏文件
+
+git init 
+创建一个empty git repository
+然后会多出一个.git文件
+生成repository的时候没有commit
+
+git status
+可以显示最后提交后更改的文件，还没有任何跟踪信息的文件标记为untracked
+
+对于需要打包更新的文件，可以先分别git add，此时他们会被添加到一个中转区域，等待commit
