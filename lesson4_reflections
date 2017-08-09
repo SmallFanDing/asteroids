@@ -7,4 +7,5 @@ push一个分支的时候，会将所有可以访问到的commit传送到github�
 新建github上的repository的时候，一般会先创建一个readme文件，因为这样会有一个commit，没有commit的repository是不能clone的。
 创建好空的repository之后，可以git remote 名字 URL来clone，然后再输入git remote就可以显示当前的clone repository
 git remote -v(显示详细信息)
-fetch是我将获得repository的地址，push是我要推送到的地址
+fetch是我将获得repository的地址，push是我要推送到的地址。
+在github上更新文件后，需要pull到本地repository
