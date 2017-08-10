@@ -34,3 +34,67 @@ chore：构建任务更新、程序包管理器配置等，生产代码无变动
 注释
 
 注释是可选内容，用于引用问题跟踪的 ID 。
+
+it diff不加参数
+对比工作区域和缓存区（此时还是之前的版本。
+如果git add之后，工作区和缓存区一致，但repository中还没有更新。
+
+git diff —staged 
+对比缓存区和repository。commit之后保持一致
+
+git reset --hard
+放弃工作目录或缓存区的所有更改，此操作后不可还原。
+
+git checkout master 可以修复 “分离的HEAD”状态，之后会介绍.
+
+至此为止commit都是线性的，如果现在想添加多个子版本。则更新时会比较复杂，git给commit添加了lable，called branches。一个支点至少有三个branch，一个主干(Master)，之前的分离的HEAD是指自己没有标记分支，git自动标记了分支，所以当出现这种警告的时候，我们要自己标记分支，而commit的分支标记会自动更新到新的commit上。
+当前分支的最后一个commit是tip(顶点) of that branch
+合并两个分支的操作叫做merge。首先要能够creating, checking out, commiting to branches.
+
+以asteroid游戏为例，
+git branch找出当前有的分支，只有一个master。
+然后 git branch easy-mode新建一个分支
+git checkout easy-mode
+则此分支会被标记为星号
+
+remote branch是别人create的
+git log --graph --oneline branch的名字
+用图表更清晰地表达branch
+从一个分支回溯，某些节点可能不能访问。所以git访问的是commit而不是branch。
+git checkout -b new _branch_name 相当于运行了两个命令， 给这个detached HEAD 新建一个分支然后checkout当前分支。可以保证新的功能在新分支上commit。
+
+
+how to merge
+两个同时包含的一定要添加，但是只有一个文件包含的不一定要添加到merge版本。
+查看原始版本，若原始版本中包含这些不确定行，则这些不添加（因为其中有人把这些行删掉了，最终版本可以没有这几行），但如果原始版本中没有，说明有人新添加了这些行，所以最终merge的时候要把这些加进去。
+
+merge之后可以删除branch，但这些commit依然存在，如果不能访问到这些commit，相当于放弃了这些commit，所以删除分支即可。
+merge后希望master branch是最新的，并指向合并的版本。
+首先git branch, git checkout master如果不在master上
+然后 git merge master coins
+merge之后容易找不到某个commit的父节点，此时git show可以自动对比其父节点。
+使用git branch dash d coins， d代表删除，只会删除标签，不会把提交删掉
+
+merge之后把游戏币变成黄色的方法：
+首先找到add color的commit，用git show id的方式查出add color的commit添加了哪些东西。
+然后用git log --graph --oneline 查找commit，找出添加coin后的差别.
+首先找到merge前的coin的最新commit，以及引入coin branch前的最新commit，对比二者
+
+
+自动merge并不总是可行。例如原本烤箱温度为100，A把烤箱温度调节为300，B把烤箱温度调节为400，此时两个新添加的语句是有冲突的，需要考虑放入哪一个。记为x, x', x''
+git如何判断这两个是新加的还是在x基础上改的？
+根据function的名字是否相同来判断。git会询问你。
+
+
+想把easy-mode同步为最新的master，但不想让master变为easy-mode，此时需要先checkout easy-mode
+git merge master easy-mode
+在game.js中出现了conflict，这是因为在这两个版本中更改了game.js的同一部分。
+
+此时打开game.js
+HEAD标记的部分是我当前的代码版本，||||====标记的中间部分是已修改的两个分支的原始版本，called common ancestor 
+>>>>>master标记的是另一个分支上的（此处对应master）当前版本。
+此处发生conflict是因为easy-mode改掉了3个分裂块->2个，然后另一块是别人改的。
+
+一般出现这种状况要先查一下两个branch都改了什么，或者和合作者讨论一下。然后删掉自己不需要的部分，以及所有特殊符号。在这个例子中sara把原来的code移动到了另外的部分，所以我可以把easy-mode和merge ancestor都删掉，留下sara的code，在她移动后的部分把3改成2，保存即可。
+此时查git status会显示both modified，也就是两个branch都modify了同一个文件。
+我add之后会提示已修复所有冲突。然后git commit.此时再查看git log，会显示只commit了一个版本，在merge版本中。git并未提交冲突的版本。
