@@ -8,4 +8,90 @@ push一个分支的时候，会将所有可以访问到的commit传送到github�
 创建好空的repository之后，可以git remote 名字 URL来clone，然后再输入git remote就可以显示当前的clone repository
 git remote -v(显示详细信息)
 fetch是我将获得repository的地址，push是我要推送到的地址。
-在github上更新文件后，需要pull到本地repository
+在github上更新文件后，需要pull到本地repository。
+
+几个概念之间的关系：Github is a service taht let users interact with Git.
+remote指代的是远程的repository
+
+
+forking
+可以直接在Github服务器上复制他人的代码库，而不用先将代码拉取到自己的机器上。所以可以直接点击fork，可以把他人的代码复制过来，然后修改时再git clone URL到本地，这样可以让原创者知道有多少人fork，fork的修改都会连接到原始代码库，并且容易向原始代码库建议更改。
+
+git clone之后Git会自动设置一个远程代码库，并指向你克隆的原始代码库。如果想把rara添加为合作者，点击settings，collaborators，添加用户，他的更改可以影响自己的repository。
+fork是把别人的代码链接到自己这边进行操作，clone是直接copy所有历史记录，分支是un-linear的操作。
+
+
+当local和github都有新的commit时，需要merge，否则一部分commit会被覆盖。clone 到local的时候，local会有一个默认的标记，例如默认的origin/master，本地commit后，github上没有更新。push的时候，github上和local将会同步跟新commit，pull同理。
+当二者都发生变化时，可以用git fetch来获取github上的副本，而且同时保持local不变
+git pull = git fetch + git merge
+eg:
+git fetch origin:
+	update all of the local copies of every branch for the origin remote. 更新origin远程代码库的所有分支的本地副本。
+	注意主语，是更新本地副本，也就是说把github上的东西搬到本地来，但是只是本地副本，还没有和真正的local合并。
+
+	当我还没fetch的时候，远程的本地副本（本地存储的远程文件夹）还没更新，所以会认为自己的repository是ahead的，fetch之后，如果远程的本地副本添加了东西，则和本地的更新有冲突。
+
+git log origin/master log的是远程的repository，只不过这个repository被复制到本地了，所以可以在offline之前把远程的东西下下来处理。
+git diff origin/master master 此处对比的是远程的文件和本地文件的区别，把钱一个当成old，比较自己这边做了哪些改动，例如我add了dy。
+
+	查看origin上的更新相当于查看remote，即github上的status
+	
+	Your output for git log origin/master before running git fetch matches the state of the repository on GitHub.
+
+	Once you've run git fetch, origin/master will contain whatever commits are currently present on the GitHub master branch.
+
+	Git status will compare your local master branch to origin/master, your local copy of the remote branch.
+
+git push origin master
+	把我本地的master分支push到origin上，此时github上已经和我同步了。
+
+git pull == fetch + merge?
+fast-forward merges，和pull不同
+发生在两个commit有父子关系的时候，即一个commit可以通过另一个commit访问。git merge a b，如果a可以通过b访问，则只需要让b指向a的上一个commit即可。
+
+
+创建pull request：
+pull requests可以让sarah轻松地看到我的更改并给出评论。
+当我fork了sara的repository，然后在本地修改后，可以push到自己的github上，然后共享给sara请求她修改，
+git branch different-oil
+git checkout different-oil
+change files
+git add xxx
+git commit
+git push origin different-oil
+当我在github端pull request的时候（注意改成pull到我自己的master），sarah会受到一封邮件。这一个请求并未真正操作pull，而是提出了想要merge到master的想法。称之为pull request是因为想把分支拉进主支。然后sarah可以留下一个评论，提出改进意见，或者内嵌一个意见。如果没有错误则选择merge pull request。如果merge conflict，sarah会要求请求者先把master merge到分支上，然后查看她是如何处理merge conflict的，这样可以保证她往主支中添加commit不会产生负面影响。
+
+
+git pull origin master 将会拉取github上的远程origin库然后merge到本地的master上
+git push origin master将本地push到remote的origin上
+
+
+如果自己在pull request的时候别人也提出了pull request。如果大家更改的在同一行，则会出现merge conflict，两人当中有一人要修改该冲突。可以先合并sarah的更改，然后解决合并冲突。此时github上的pull request失效，github要求在自己的计算机上合并更改。
+所以此时我需要pull master分支，此操作将更新本地版本。在更正后，继续pull request
+在合作环境下，如果不经过pull request就直接merge的话，会导致对方不知道更新是否影响master。在不知道对方有没有更改master时，可以先fetch，这样不影响本地，确认后再merge
+git是本地的，github是面向社区，开源的。
+
+和origin类似，fork的原始版本库称为upstream，所以如果想让自己本地的master和upstream的保持一致，可以git pull upstream/master master
+
+fork一个开源项目并且添加自己的更新 操作步骤：
+add the original repository as a remote in your clone
+	git remote add upstream URL(在开源项目中找到clone的URL)
+
+pull the master branch from the original repository
+	git checkout master 
+	git pull upstream master
+	有conflict则更改对应文件
+merge the master branch into your change branch
+	git checkout newbranch
+	change files
+	git merge master newbranch
+
+push your change branch to your fork
+	git add file
+	git commit
+	git push origin newbranch
+	注意是push到origin的newbranch，因为你没有权限推到upstream，分支不要写错了
+	注意要让自己的master保持最新，所以
+
+	git checkout master
+	git push
